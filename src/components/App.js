@@ -5,9 +5,10 @@ import '../assets/styles/reset.css';
 
 
 import TelaLogin from "./TelaLogin";
-import TelaRegistro from "./TelaRegistro";
+import TelaCadastro from "./TelaCadastro";
 import TelaHabitos from "./TelaHabitos";
 import TelaHoje from "./TelaHoje";
+import TelaHistorico from "./TelaHistorico";
 
 export default function App () {
 
@@ -18,9 +19,10 @@ export default function App () {
             <BrowserRouter>
                 <Routes>
                     <Route path="/" element={<TelaLogin />} />
-                    <Route path="/cadastro" element={<TelaRegistro />} />
+                    <Route path="/cadastro" element={<TelaCadastro />} />
                     <Route path="/habitos" element={<TelaHabitos />} />
                     <Route path="/hoje" element={<TelaHoje />} />
+                    <Route path="/historico" element={<TelaHistorico />} />
                 </Routes> 
             </BrowserRouter>
         </NameContext.Provider>
