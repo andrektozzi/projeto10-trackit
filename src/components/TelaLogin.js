@@ -34,7 +34,8 @@ export default function TelaLogin () {
                     name: data.name,
                     image: data.image,
                     email: data.email,
-                }
+                    token: data.token,
+                },
             );
             navigate("/hoje");
         });
@@ -124,5 +125,6 @@ const LoginForms = styled.form`
     font-size:20px;
     font-family: 'Lexend Deca', sans-serif;
     pointer-events: ${props => props.enable ? 'auto' : 'none'};
+    opacity: ${props => props.enable ? '1' : '0.7'};
   };
-  `
+`
