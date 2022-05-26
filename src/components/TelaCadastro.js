@@ -86,10 +86,12 @@ const Container = styled.div`
   *{
     box-sizing: border-box;
     }
-  img{
+  
+    img{
       width: 180px;
       height:179px;
   };
+  
   a{
       color:#52B6FF;
       margin-top: 25px;
@@ -102,6 +104,7 @@ const LoginForms = styled.form`
   justify-content: center;
   align-items: flex-start;
   margin-top:32px;
+  
   input{
       width: 303px;
       height: 45px;
@@ -115,11 +118,13 @@ const LoginForms = styled.form`
       border-radius: 5px;
       margin-bottom:6px;
       pointer-events: ${props => props.enable ? 'auto' : 'none'};
+      
       ::placeholder{
         color: ${props => props.enable ? '#DBDBDB' : '#AFAFAF'};
         opacity: 1;
       };
   };
+  
   button{
     width: 303px;
     height: 45px;
@@ -132,5 +137,6 @@ const LoginForms = styled.form`
     font-family: 'Lexend Deca', sans-serif;
     pointer-events: ${props => props.enable ? 'auto' : 'none'};
     opacity: ${props => props.enable ? '1' : '0.7'};
+    cursor: pointer;
   };
 `

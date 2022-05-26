@@ -12,13 +12,13 @@ export default function TelaHabitos () {
 
     const { user } = useContext(UserContext);
     const token = user.token;
-
     const [enable, setEnable] = useState(true);
     const [clicked, setClicked] = useState(false);
-
     const [name, setName] = useState("");
     const [days, setDays] = useState([]);
     const [myHabits, setMyHabits] = useState([]);
+
+    const weekdays = [{day: "D"}, {day: "S"}, {day: "T"}, {day: "Q"}, {day: "Q"}, {day: "S"}, {day: "S"}];
 
     const config = {
         headers: {
@@ -43,7 +43,11 @@ export default function TelaHabitos () {
     }
 
     function MountAddHabits() {
-        const [active, setActive] = useState([]);
+        const buttonsWeekday = weekdays.map((weekday, index) => {
+            return (
+                <ButtonWeekday type="button" enable={enable} key={index} id={index} days={days} onClick={() => SetWeekdays(index)}>{weekday.day}</ButtonWeekday>
+            )
+        })
 
         if (clicked) {
             return (
@@ -51,14 +55,8 @@ export default function TelaHabitos () {
                     <input type="text" id="name" value={name} placeholder="nome do hábito" required
                         onChange={e => setName(e.target.value)}
                     />
-                    <Grid enable={enable} active={active}>
-                        <button type="button" onClick={() => setDays([...days, 0])}>D</button>
-                        <button type="button" onClick={() => setDays([...days, 1])}>S</button>
-                        <button type="button" onClick={() => setDays([...days, 2])}>T</button>
-                        <button type="button" onClick={() => setDays([...days, 3])}>Q</button>
-                        <button type="button" onClick={() => setDays([...days, 4])}>Q</button>
-                        <button type="button" onClick={() => setDays([...days, 5])}>S</button>
-                        <button type="button" onClick={() => setDays([...days, 6])}>S</button>
+                    <Grid>
+                        {buttonsWeekday}
                     </Grid>
                     <ActionButtons enable={enable}>
                         <button className="cancel" onClick={() => setClicked(false)}>Cancelar</button>
@@ -68,7 +66,16 @@ export default function TelaHabitos () {
             )
         }
     }
-    console.log(days)
+   
+    function SetWeekdays(index) {
+        const selected = days.some(day => day === index);
+        if (!selected) {
+            setDays([...days, index])
+        } else {
+            const newSelected = days.filter(day => day !== index);
+            setDays(newSelected);
+        }
+    }
 
     function AddHabits(event) {
         event.preventDefault();
@@ -96,7 +103,6 @@ export default function TelaHabitos () {
             setEnable(true);
         })
     }
-    console.log(myHabits)
 
     function GetListHabits() {
         useEffect(() => {
@@ -105,7 +111,6 @@ export default function TelaHabitos () {
             promise.then((response) => {
                 const { data } = response;
                 setMyHabits(data);
-                console.log(data);
             });
 
             promise.catch(err => {
@@ -116,25 +121,56 @@ export default function TelaHabitos () {
 
     }
 
+    window.onbeforeunload = (event) => {
+        const e = event || window.event;
+        e.preventDefault();
+        if (e) {
+            e.returnValue = '';
+        }
+        return '';
+    }
+
+    function DeleteHabit(item, index, e) {
+        let confirmation = window.confirm("Você tem certeza que quer deletar este hábito?")
+        e.preventDefault();
+
+        if(confirmation) {
+            const promise = axios.delete(`https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/${item.id}`, config);
+
+            promise.then((res) => {
+                const promise = axios.get("https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits", config)
+
+                promise.then((res) => {
+                    const {data} = res;
+                    setMyHabits(data)
+                })
+            });
+
+            promise.catch(err => {
+                alert("Não foi possível apagar o hábito")
+            })
+        }
+    }
+
     function MountListHabits() {
-        const [active, setActive] = useState([]);
 
         const habits = myHabits.map((item, index) => {
+            const buttonsWeekday = weekdays.map((weekday, index) => {
+                return (
+                    <ButtonWeekday type="button" enable={enable} key={index} id={index} days={item.days.map((e) => e)}>{weekday.day}</ButtonWeekday>
+                )
+            })
             return (
                 <>
                     <HabitContainer>
                         <HabitHeader>
                             <span>{item.name}</span>
-                            <ion-icon name="trash-outline"></ion-icon>
+                            <button onClick={(e) => DeleteHabit(item, index, e)}>
+                                <ion-icon name="trash-outline"></ion-icon>
+                            </button>                            
                         </HabitHeader>
-                        <Grid active={active}>
-                            <button type="button">D</button>
-                            <button type="button">S</button>
-                            <button type="button">T</button>
-                            <button type="button">Q</button>
-                            <button type="button">Q</button>
-                            <button type="button">S</button>
-                            <button type="button">S</button>
+                        <Grid>
+                            {buttonsWeekday}
                         </Grid>
                     </HabitContainer>
                 </>
@@ -241,17 +277,18 @@ const Grid = styled.div`
     align-items: flex-start;
     margin-top: 8px;
     align-items: flex-start;
-    button{
+`
+const ButtonWeekday = styled.button`
         width: 30px;
         height: 30px;
-        background: ${props => props.active ? '#FFFFFF' : '#F2F2F2'};
+        background: #${props => ((props.days.find((e) => e === props.id)) === undefined) ? "FFFFFF" : "CFCFCF"};
         border: 1px solid #D5D5D5;
         border-radius: 5px;
         font-size: 20px;
-        color: #DBDBDB;
+        color: #${props => ((props.days.find((e) => e === props.id)) === undefined) ? "DBDBDB" : "FFFFFF"};
         margin-right: 4px;
+        cursor:pointer;
         pointer-events: ${props => props.enable ? 'auto' : 'none'};
-    };
 `
 
 const ActionButtons = styled.div`
@@ -284,5 +321,10 @@ const HabitHeader = styled.div`
     ion-icon{
         font-size:20px;
         color: #666666;
+        cursor:pointer;
+    }
+    button{
+        background-color: #FFFFFF;
+        border:none;
     }
 `

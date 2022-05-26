@@ -10,6 +10,7 @@ export default function Footer(){
 
     const { user } = useContext(UserContext);
 
+    console.log(user)
     const percentage=20;
 
     return(
@@ -51,9 +52,12 @@ const Container = styled.div`
     bottom:0;
     right:0;
     background-color: #FFFFFF; 
+    z-index:1;
+    
     *{
         box-sizing: border-box;
     }
+    
     button{
         background-color: #FFFFFF;  
         border:none;
