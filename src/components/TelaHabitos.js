@@ -324,6 +324,7 @@ const ActionButtons = styled.div`
         color: #52B6FF;
     }
 `
+
 const HabitHeader = styled.div`
     display: flex;
     flex-direction: row;

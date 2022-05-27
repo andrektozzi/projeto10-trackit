@@ -1,17 +1,10 @@
-import { useContext } from "react";
-import UserContext from "../context/UserContext";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import 'react-circular-progressbar/dist/styles.css';
 import { CircularProgressbar,  buildStyles } from 'react-circular-progressbar';
 
 
-export default function Footer(){
-
-    const { user } = useContext(UserContext);
-
-    console.log(user)
-    const percentage=20;
+export default function Footer({percentage}){
 
     return(
         <Container>
@@ -27,8 +20,8 @@ export default function Footer(){
                         backgroundPadding={6}
                         styles={buildStyles({
                             backgroundColor: "#52B6FF",
-                            textColor: "#fff",
-                            pathColor: "#fff",
+                            textColor: "#FFFFFF",
+                            pathColor: "#FFFFFF",
                             trailColor: "transparent"
                         })}
                     />
